@@ -25,7 +25,7 @@ void Gotoxy(int x, int y) {
     COORD coord;
     coord.X = x;
     coord.Y = y;
-    SetConsoleCursorPosition(HANDLE STD_OUTPUT_HANDLE, coord);
+    SetConsoleCursorPosition(GetStdHandle( STD_OUTPUT_HANDLE), coord);
 }
 
 void Inicio() {
