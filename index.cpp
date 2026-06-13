@@ -1,4 +1,3 @@
-#include <consoleapi2.h>
 #include <iostream>
 #include <Windows.h>
 
