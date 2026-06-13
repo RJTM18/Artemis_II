@@ -1,7 +1,12 @@
+#ifndef INTERFAZ_H
+#define INTERFAZ_H
+
 #include <iostream>
 #include <string>
 
-// Códigos de color ANSI para la consola
+// =================================================================================
+// CONTROL DE COLORES ANSI
+// =================================================================================
 const std::string RESET   = "\033[0m";
 const std::string AZUL    = "\033[34m";
 const std::string ROJO    = "\033[31m";
@@ -9,14 +14,14 @@ const std::string VERDE   = "\033[32m";
 const std::string AMARILLO= "\033[33m";
 const std::string CIAN    = "\033[36m";
 
-// Función utilitaria para limpiar la pantalla de manera eficiente
+// Limpieza de pantalla eficiente para sistemas POSIX/Windows moderno
 void limpiarPantalla() {
     std::cout << "\033[2J\033[1;1H";
 }
 
-// ==========================================
-// WBS 1.2.1: ASSETS EN ART ASCII
-// ==========================================
+// =================================================================================
+// WBS 1.2.1: ASSETS EN ARTE ASCII
+// =================================================================================
 
 void dibujarTierra() {
     std::cout << VERDE << R"(
@@ -42,16 +47,24 @@ void dibujarLuna() {
 )" << RESET;
 }
 
-// Sprite de la nave pintado de AZUL por requerimiento
+// Nave pintada en AZUL obligatorio por requerimiento
 void dibujarNave() {
     std::cout << AZUL << R"(    /---.
 ====|===##[>)
     \---')" << RESET << std::endl;
 }
 
-// ==========================================
+void dibujarAstronauta() {
+    std::cout << VERDE << " o \n/|\\\n/ \\" << RESET << std::endl;
+}
+
+void dibujarMeteorito() {
+    std::cout << ROJO << " (*)" << RESET << std::endl;
+}
+
+// =================================================================================
 // WBS 1.2.3: PANEL DE CONTROL (HUD)
-// ==========================================
+// =================================================================================
 void mostrarHUD(int pasajeros, int tiempoRestante, int vidas, int velocidad) {
     std::cout << CIAN << "=================================================================================" << RESET << std::endl;
     std::cout << " MISIÓN: ARTEMIS II | NAVE: " << AZUL << "ORIÓN-X9 (AZUL)" << RESET 
@@ -60,7 +73,7 @@ void mostrarHUD(int pasajeros, int tiempoRestante, int vidas, int velocidad) {
     
     std::cout << " TIEMPO RESTANTE: " << AMARILLO << tiempoRestante << "s" << RESET << " | VIDAS: ";
     
-    // Renderizado dinámico de corazones según las vidas restantes
+    // Renderizado dinámico de corazones según el estado que pase Armando
     for (int i = 0; i < 3; i++) {
         if (i < vidas) std::cout << ROJO << "[♥] " << RESET;
         else std::cout << "[ ] ";
@@ -70,9 +83,9 @@ void mostrarHUD(int pasajeros, int tiempoRestante, int vidas, int velocidad) {
     std::cout << CIAN << "=================================================================================" << RESET << std::endl;
 }
 
-// ==========================================
-// WBS 1.3.2: FLUJO DE PANTALLAS
-// ==========================================
+// =================================================================================
+// WBS 1.3.2: FLUJO DE PANTALLAS (CORREGIDO)
+// =================================================================================
 
 void mostrarBienvenida() {
     limpiarPantalla();
@@ -95,7 +108,7 @@ void mostrarBienvenida() {
  atrapados en el espacio entre la Tierra y la Luna. 
  
  REGLAS DE CONTROL:
- - Capacidad máxima de la nave: 2 pasajeros. Debes regresar a la Luna/Base para vaciarla.
+ - Capacidad máxima de la nave: 2 pasajeros. Debes regresar a la base para vaciarla.
  - Cuentas con 3 vidas. Impactar un meteorito te regresará al punto de inicio.
  - El tiempo es limitado y variable (entre 80 y 120 segundos). ¡Date prisa!
 
@@ -103,20 +116,18 @@ void mostrarBienvenida() {
                   [ Presiona ENTER para iniciar el despegue ]
 ---------------------------------------------------------------------------------
 )";
-    std::cin.get(); // Espera a que el usuario presione Enter
+    std::cin.get(); 
 }
 
 void mostrarVictoria() {
     limpiarPantalla();
     std::cout << VERDE << R"(
 =================================================================================
- #######      ###    ##    ##    ###     ######  ######## ########  ####  #### 
-##     ##    ## ##   ###   ##   ## ##   ##    ##    ##    ##        ####  #### 
-##          ##   ##  ####  ##  ##   ##  ##          ##    ##        ####  #### 
-##    #### ##     ## ## ## ## ##     ##  ######     ##    ######     ##    ##  
-##     ##  ######### ##  #### #########       ##    ##    ##                   
-##     ##  ##     ## ##   ### ##     ## ##    ##    ##    ##        ####  #### 
- #######   ##     ## ##    ## ##     ##  ######     ##    ########  ####  #### 
+ __  __ ___ ____ ___ ___  _   _    ____ ___  __  __ ____  _     _____ _____ _    
+|  \/  |_ _/ ___|_ _/ _ \| \ | |  / ___/ _ \|  \/  |  _ \| |   | ____|_   _/ \   
+| |\/| || |\___ \| | | | |  \| | | |  | | | | |\/| | |_) | |   |  _|   | |/ _ \  
+| |  | || | ___) | | |_| | |\  | | |__| |_| | |  | |  __/| |___| |___  | / ___ \ 
+|_|  |_|___|____/___\___/|_| \_|  \____\___/|_|  |_|_|   |_____|_____| |/_/   \_\
 =================================================================================
 )" << RESET;
 
@@ -133,12 +144,11 @@ void mostrarGameOver(std::string causa, int rescatados) {
     limpiarPantalla();
     std::cout << ROJO << R"(
 =================================================================================
-  __  __ _____  _____ _____  ______ _   _    ______ _____ _   _  _ 
- |  \/  |_   _|/ ____|_   _|/ __   | \ | |  |  ____|_   _| \ | | | |
- | \  / | | | | (___   | | | |  |  |  \| |  | |__    | | |  \| | | |
- | |\/| | | |  \___ \  | | | |  |  | . ` |  |  __|   | | | . ` | | |
- | |  | |_| |_ ____) |_| |_| |__|  | |\  |  | |     _| |_| |\  | |_|
- |_|  |_|_____|_____/|_____|\_____/|_| \_|  |_|    |_____|_| \_(_) (_)
+  ____    _    __  __ _____    ___  _   _ _____ ____  
+ / ___|  / \  |  \/  | ____|  / _ \| | | | ____|  _ \ 
+| |  _  / _ \ | |\/| |  _|   | | | | | | |  _| | |_) |
+| |_| |/ ___ \| |  | | |___  | |_| | |_| | |___|  _ < 
+ \____/_/   \_\_|  |_|_____|  \___/ \___/|_____|_| \_\
 =================================================================================
 )" << RESET;
 
@@ -155,7 +165,7 @@ void mostrarGameOver(std::string causa, int rescatados) {
  ¿Deseas reintentar la misión y salvar a la tripulación? (S/N): )";
 }
 
-void mostrarCreditos(std::string nombreIntegrante1, std::string nombreIntegrante2, std::string nombreIntegrante3) {
+void mostrarCreditos(std::string name1, std::string name2, std::string name3) {
     limpiarPantalla();
     std::cout << AMARILLO << R"(
 =================================================================================
@@ -164,11 +174,13 @@ void mostrarCreditos(std::string nombreIntegrante1, std::string nombreIntegrante
 )" << RESET;
     std::cout << " GRACIAS POR JUGAR \"ARTEMIS II: RETURN TO THE MOON\"\n\n";
     std::cout << " Desarrollado en 48 horas bajo la metodología WBS por:\n";
-    std::cout << " - Integrante 1 (Dev Lead & Logic): " << nombreIntegrante1 << "\n";
-    std::cout << " - Integrante 2 (UI/UX & ASCII Artist): " << nombreIntegrante2 << "\n";
-    std::cout << " - Integrante 3 (QA & Documentation): " << nombreIntegrante3 << "\n\n";
+    std::cout << " - Integrante 1 (Dev Lead & Logic): " << name1 << "\n";
+    std::cout << " - Integrante 2 (UI/UX & ASCII Artist): " << name2 << "\n";
+    std::cout << " - Integrante 3 (QA & Documentation): " << name3 << "\n\n";
     std::cout << " Herramientas de IA utilizadas y auditadas en Bitácora (Anexo 1):\n";
-    std::cout << " - ChatGPT / Gemini (Asistencia en UI y estructura modular C++).\n\n";
+    std::cout << " - Gemini (Asistencia en estandarización de UI y arquitectura en C++).\n\n";
     std::cout << " © 2026 - FlyMeToTheMoon Studios. Todos los derechos reservados.\n";
     std::cout << AMARILLO << "=================================================================================" << RESET << std::endl;
 }
+
+#endif // INTERFAZ_H
