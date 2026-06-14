@@ -9,11 +9,12 @@
 // =================================================================================
 const std::string RESET   = "\033[0m";
 const std::string AZUL    = "\033[34m"; // Color exclusivo de la Nave Orión-X9
-const std::string ROJO    = "\033[31m"; // Alertas, colisiones y fallos
+const std::string ROJO    = "\033[31m"; // Alertas, colisiones y fracaso
 const std::string VERDE   = "\033[32m"; // Éxito, Tierra y elementos salvados
 const std::string AMARILLO= "\033[33m"; // Telemetría de tiempo y Luna
 const std::string CIAN    = "\033[36m"; // Bordes de contenedores y HUD
 
+// Limpieza de buffer y pantalla eficiente mediante secuencias de escape ANSI
 void limpiarPantalla() {
     std::cout << "\033[2J\033[1;1H";
 }
@@ -21,6 +22,7 @@ void limpiarPantalla() {
 // =================================================================================
 // SECCIÓN 2: WBS 1.2.1 - CONTROL DE ASSETS GRÁFICOS (ARTE ASCII)
 // =================================================================================
+
 void dibujarTierra() {
     std::cout << VERDE << R"(
      .-----.
@@ -67,8 +69,10 @@ void mostrarHUD(int pasajeros, int tiempoRestante, int vidas, int velocidad) {
     std::cout << " MISIÓN: ARTEMIS II | NAVE: " << AZUL << "ORIÓN-X9" << RESET 
               << " | CAPACIDAD EN CABINA: [" << pasajeros << " / 2] ASTRONAUTAS" << std::endl;
     std::cout << CIAN << "---------------------------------------------------------------------------------" << RESET << std::endl;
+    
     std::cout << " CRONÓMETRO DE REENTRADA: " << AMARILLO << tiempoRestante << "s" << RESET << " | INTEGRIDAD RESIDUOS: ";
     
+    // Renderizado dinámico de indicadores de salud (Corazones ANSI)
     for (int i = 0; i < 3; i++) {
         if (i < vidas) std::cout << ROJO << "[♥] " << RESET;
         else std::cout << "[ ] ";
@@ -79,20 +83,19 @@ void mostrarHUD(int pasajeros, int tiempoRestante, int vidas, int velocidad) {
 }
 
 // =================================================================================
-// SECCIÓN 4: WBS 1.3.2 - CRONOLOGÍA Y FLUJO DEL SISTEMA (UX Optimizada)
+// SECCIÓN 4: WBS 1.3.2 - CRONOLOGÍA Y FLUJO DEL SISTEMA (UX COMPLETA)
 // =================================================================================
 
-// 4.1. ESTADO INICIAL: Inicialización de la simulación y carga del Lore técnico
+// 4.1. ESTADO INICIAL: Bienvenida con logotipo ultra-nítido y geométrico
 void mostrarBienvenida() {
     limpiarPantalla();
     std::cout << CIAN << R"(
 =================================================================================
-             _  ______ _____ _____ __  __ _____  _____   _____ _____ 
-            / \|  ____|  __ \_   _|  \/  |_   _|/ ____| |_   _|_   _|
-           / _ \ |__  | |__) || | | \  / | | | | (___     | |   | |  
-          / ___ \|  __| |  _  / | | | |\/| | | |  \___ \    | |   | |  
-         / /   \ \ |    | | \ \_| |_| |  | |_| |_ ____) |  _| |_ _| |_ 
-        /_/     \_\_|    |_|  \_\_____|_|  |_|_____|_____/ |_____|_____|
+        _   ___ _____ ___ __  __ ___ ___      ___  ___ 
+       /_\ | _ \_   _| __|  \/  |_ _/ __|    |_ _||_ _|
+      / _ \|   / | | | _|| |\/| || |\__ \     | |  | | 
+     /_/ \_\_|_\ |_| |___|_|  |_|___|___/    |___||___|
+
                                RETURN TO THE MOON
 =================================================================================
 )" << RESET;
@@ -116,7 +119,7 @@ void mostrarBienvenida() {
     std::cin.get(); 
 }
 
-// 4.2. ESTADO TERMINAL A: Desenlace por Fracaso Crítico (Ajustado por Alejandro)
+// 4.2. ESTADO TERMINAL A: Desenlace por pérdida de recursos / colisiones
 void mostrarMisionFracasada(std::string causa, int rescatados) {
     limpiarPantalla();
     std::cout << ROJO << R"(
@@ -140,7 +143,7 @@ void mostrarMisionFracasada(std::string causa, int rescatados) {
  ¿Desea reiniciar el bucle de simulación para mitigar las bajas? (S/N): )";
 }
 
-// 4.3. ESTADO TERMINAL B: Desenlace por Éxito Operacional (Condición de victoria)
+// 4.3. ESTADO TERMINAL B: Desenlace por éxito operativo completo
 void mostrarMisionCompleta() {
     limpiarPantalla();
     std::cout << VERDE << R"(
@@ -162,7 +165,7 @@ void mostrarMisionCompleta() {
  ¿Desea ejecutar una nueva sesión operativa para optimizar sus tiempos? (S/N): )";
 }
 
-// 4.4. CIERRE FORMAL DEL SISTEMA: Salida limpia y atribución de autorías
+// 4.4. CIERRE FORMAL DEL SISTEMA: Créditos institucionales y salida limpia
 void mostrarCreditos(std::string name1, std::string name2, std::string name3) {
     limpiarPantalla();
     std::cout << AMARILLO << R"(
@@ -175,8 +178,8 @@ void mostrarCreditos(std::string name1, std::string name2, std::string name3) {
     std::cout << " - Integrante 1 (Lógica de Negocio y Motor de Simulación): " << name1 << "\n";
     std::cout << " - Integrante 2 (Diseño Arquitectónico UI/UX y Arte ASCII): " << name2 << "\n";
     std::cout << " - Integrante 3 (Aseguramiento de Calidad QA y Auditoría): " << name3 << "\n\n";
-    std::cout << " Trazabilidad y Asistencia de Inteligencia Artificial (Anexo 1):\n";
-    std::cout << " - Engine Evaluador Gemini: Optimización de flujos cronológicos paralelos.\n\n";
+    std::cout << " Herramientas de IA utilizadas y auditadas en Bitácora (Anexo 1):\n";
+    std::cout << " - Engine Evaluador Gemini: Optimización de flujos cronológicos y refinamiento estético ASCII.\n\n";
     std::cout << " © 2026 - FlyMeToTheMoon Academic Studios. Especificación de Diseño Formal.\n";
     std::cout << AMARILLO << "=================================================================================" << RESET << std::endl;
 }
