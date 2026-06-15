@@ -1,22 +1,27 @@
+#ifndef INTERFAZ_H
+#define INTERFAZ_H
+
 #include <iostream>
 #include <string>
 
-// Códigos de color ANSI para la consola
+// =================================================================================
+// SECCIÓN 1: CONTROL DE PALETA DE COLORES ANSI (Estándar de Consola)
+// =================================================================================
 const std::string RESET   = "\033[0m";
-const std::string AZUL    = "\033[34m";
-const std::string ROJO    = "\033[31m";
-const std::string VERDE   = "\033[32m";
-const std::string AMARILLO= "\033[33m";
-const std::string CIAN    = "\033[36m";
+const std::string AZUL    = "\033[34m"; // Color exclusivo de la Nave Orión-X9
+const std::string ROJO    = "\033[31m"; // Alertas, colisiones y fracaso
+const std::string VERDE   = "\033[32m"; // Éxito, Tierra y elementos salvados
+const std::string AMARILLO= "\033[33m"; // Telemetría de tiempo y Luna
+const std::string CIAN    = "\033[36m"; // Bordes de contenedores y HUD
 
-// Función utilitaria para limpiar la pantalla de manera eficiente
+// Limpieza de buffer y pantalla eficiente mediante secuencias de escape ANSI
 void limpiarPantalla() {
     std::cout << "\033[2J\033[1;1H";
 }
 
-// ==========================================
-// WBS 1.2.1: ASSETS EN ART ASCII
-// ==========================================
+// =================================================================================
+// SECCIÓN 2: WBS 1.2.1 - CONTROL DE ASSETS GRÁFICOS (ARTE ASCII)
+// =================================================================================
 
 void dibujarTierra() {
     std::cout << VERDE << R"(
@@ -42,133 +47,141 @@ void dibujarLuna() {
 )" << RESET;
 }
 
-// Sprite de la nave pintado de AZUL por requerimiento
 void dibujarNave() {
     std::cout << AZUL << R"(    /---.
 ====|===##[>)
     \---')" << RESET << std::endl;
 }
 
-// ==========================================
-// WBS 1.2.3: PANEL DE CONTROL (HUD)
-// ==========================================
+void dibujarAstronauta() {
+    std::cout << VERDE << " o \n/|\\\n/ \\" << RESET << std::endl;
+}
+
+void dibujarMeteorito() {
+    std::cout << ROJO << " (*)" << RESET << std::endl;
+}
+
+// =================================================================================
+// SECCIÓN 3: WBS 1.2.3 - PANEL DE CONTROL DINÁMICO (HUD DE TELEMETRÍA)
+// =================================================================================
 void mostrarHUD(int pasajeros, int tiempoRestante, int vidas, int velocidad) {
     std::cout << CIAN << "=================================================================================" << RESET << std::endl;
-    std::cout << " MISIÓN: ARTEMIS II | NAVE: " << AZUL << "ORIÓN-X9 (AZUL)" << RESET 
-              << " | CAPACIDAD: [" << pasajeros << " / 2] ASTRONAUTAS" << std::endl;
+    std::cout << " MISIÓN: ARTEMIS II | NAVE: " << AZUL << "ORIÓN-X9" << RESET 
+              << " | CAPACIDAD EN CABINA: [" << pasajeros << " / 2] ASTRONAUTAS" << std::endl;
     std::cout << CIAN << "---------------------------------------------------------------------------------" << RESET << std::endl;
     
-    std::cout << " TIEMPO RESTANTE: " << AMARILLO << tiempoRestante << "s" << RESET << " | VIDAS: ";
+    std::cout << " CRONÓMETRO DE REENTRADA: " << AMARILLO << tiempoRestante << "s" << RESET << " | INTEGRIDAD RESIDUOS: ";
     
-    // Renderizado dinámico de corazones según las vidas restantes
+    // Renderizado dinámico de indicadores de salud (Corazones ANSI)
     for (int i = 0; i < 3; i++) {
         if (i < vidas) std::cout << ROJO << "[♥] " << RESET;
         else std::cout << "[ ] ";
     }
     
-    std::cout << " | VELOCIDAD ACTUAL: " << velocidad << " km/s" << std::endl;
+    std::cout << " | VELOCIDAD RECOMBINANTE: " << velocidad << " km/s" << std::endl;
     std::cout << CIAN << "=================================================================================" << RESET << std::endl;
 }
 
-// ==========================================
-// WBS 1.3.2: FLUJO DE PANTALLAS
-// ==========================================
+// =================================================================================
+// SECCIÓN 4: WBS 1.3.2 - CRONOLOGÍA Y FLUJO DEL SISTEMA (UX COMPLETA)
+// =================================================================================
 
+// 4.1. ESTADO INICIAL: Bienvenida con logotipo ultra-nítido y geométrico
 void mostrarBienvenida() {
     limpiarPantalla();
     std::cout << CIAN << R"(
 =================================================================================
-             _  ______ _____ _____ __  __ _____  _____   _____ _____ 
-            / \|  ____|  __ \_   _|  \/  |_   _|/ ____| |_   _|_   _|
-           / _ \ |__  | |__) || | | \  / | | | | (___     | |   | |  
-          / ___ \|  __| |  _  / | | | |\/| | | |  \___ \    | |   | |  
-         / /   \ \ |    | | \ \_| |_| |  | |_| |_ ____) |  _| |_ _| |_ 
-        /_/     \_\_|    |_|  \_\_____|_|  |_|_____|_____/ |_____|_____|
+        _   ___ _____ ___ __  __ ___ ___      ___  ___ 
+       /_\ | _ \_   _| __|  \/  |_ _/ __|    |_ _||_ _|
+      / _ \|   / | | | _|| |\/| || |\__ \     | |  | | 
+     /_/ \_\_|_\ |_| |___|_|  |_|___|___/    |___||___|
+
                                RETURN TO THE MOON
 =================================================================================
 )" << RESET;
 
     std::cout << R"(
- HISTORIA DE LA MISIÓN:
- Año 2026. Una lluvia masiva de meteoritos amenaza la órbita lunar. 
- Tu misión como comandante de la nave Orión es rescatar a 12 astronautas 
- atrapados en el espacio entre la Tierra y la Luna. 
+ CONTEXTUALIZACIÓN DE LA OPERACIÓN:
+ Órbita Lunar, Año 2026. Una tormenta imprevista de bólidos y meteoritos fragmentados 
+ compromete la seguridad planetaria. Tu objetivo como Comandante de la Orión-X9 
+ consiste en ejecutar maniobras de aproximación para rescatar a 12 astronautas.
  
- REGLAS DE CONTROL:
- - Capacidad máxima de la nave: 2 pasajeros. Debes regresar a la Luna/Base para vaciarla.
- - Cuentas con 3 vidas. Impactar un meteorito te regresará al punto de inicio.
- - El tiempo es limitado y variable (entre 80 y 120 segundos). ¡Date prisa!
+ PROTOCOLO Y RESTRICCIONES DE VUELO (MÉTRICAS DEL SISTEMA):
+ - Capacidad Limitada: Soporte vital para máximo 2 tripulantes en tránsito simultáneo.
+ - Mecánica de Almacenamiento: Obligatorio retornar a la base para descargar personal.
+ - Tolerancia al Impacto: El blindaje resiste 3 colisiones antes de la desintegración.
+ - Ventana Temporal Crítica: Tiempo de eyección restringido por soporte de oxígeno.
 
 ---------------------------------------------------------------------------------
-                  [ Presiona ENTER para iniciar el despegue ]
+              [ PRESIONE ENTER PARA INICIAR PROTOCOLO DE DESPEGUE ]
 ---------------------------------------------------------------------------------
 )";
-    std::cin.get(); // Espera a que el usuario presione Enter
+    std::cin.get(); 
 }
 
-void mostrarVictoria() {
-    limpiarPantalla();
-    std::cout << VERDE << R"(
-=================================================================================
- #######      ###    ##    ##    ###     ######  ######## ########  ####  #### 
-##     ##    ## ##   ###   ##   ## ##   ##    ##    ##    ##        ####  #### 
-##          ##   ##  ####  ##  ##   ##  ##          ##    ##        ####  #### 
-##    #### ##     ## ## ## ## ##     ##  ######     ##    ######     ##    ##  
-##     ##  ######### ##  #### #########       ##    ##    ##                   
-##     ##  ##     ## ##   ### ##     ## ##    ##    ##    ##        ####  #### 
- #######   ##     ## ##    ## ##     ##  ######     ##    ########  ####  #### 
-=================================================================================
-)" << RESET;
-
-    std::cout << R"(
- ¡Felicidades, Comandante! 
- Has rescatado con éxito a los 12 tripulantes antes de que se agotara el tiempo.
- La misión Artemis II ha sido un éxito histórico gracias a tu pericia de vuelo.
-
----------------------------------------------------------------------------------
- ¿Deseas volver a intentar la misión y superar tu tiempo? (S/N): )";
-}
-
-void mostrarGameOver(std::string causa, int rescatados) {
+// 4.2. ESTADO TERMINAL A: Desenlace por pérdida de recursos / colisiones
+void mostrarMisionFracasada(std::string causa, int rescatados) {
     limpiarPantalla();
     std::cout << ROJO << R"(
 =================================================================================
-  __  __ _____  _____ _____  ______ _   _    ______ _____ _   _  _ 
- |  \/  |_   _|/ ____|_   _|/ __   | \ | |  |  ____|_   _| \ | | | |
- | \  / | | | | (___   | | | |  |  |  \| |  | |__    | | |  \| | | |
- | |\/| | | |  \___ \  | | | |  |  | . ` |  |  __|   | | | . ` | | |
- | |  | |_| |_ ____) |_| |_| |__|  | |\  |  | |     _| |_| |\  | |_|
- |_|  |_|_____|_____/|_____|\_____/|_| \_|  |_|    |_____|_| \_(_) (_)
+ _  _ _ ____ _ ____ _  _    ____ ____ ____ ____ ____ ____ ____ ___  ____ 
+ |\/| | [__  | |  | |\ |    |___ |__/ |__| |    |__| [__  |__| |  \ |__| 
+ |  | | ___] | |__| | \|    |    |  \ |  | |___ |  | ___] |  | |__/ |  | 
 =================================================================================
 )" << RESET;
 
     std::cout << R"(
- MISIÓN FALLIDA.
- La nave Orión no logró completar el rescate. El espacio exterior es un lugar hostil.
+ DIAGNÓSTICO: OPERACIÓN CONCLUIDA CON FRACASO
+ La astronave no consiguió estabilizar los perímetros de extracción espacial.
 
- Estadísticas de tu intento:
+ TELEMETRÍA DEL INTENTO:
 )" << std::endl;
-    std::cout << " - Astronautas a salvo en la Luna: " << VERDE << rescatados << " de 12." << RESET << std::endl;
-    std::cout << " - Causa del fallo: " << ROJO << causa << RESET << std::endl;
+    std::cout << " -> Personal salvaguardado en vectores seguros: " << VERDE << rescatados << " de 12 tripulantes." << RESET << std::endl;
+    std::cout << " -> Vector de Interrupción del Sistema: " << ROJO << causa << RESET << std::endl;
     std::cout << R"(
 ---------------------------------------------------------------------------------
- ¿Deseas reintentar la misión y salvar a la tripulación? (S/N): )";
+ ¿Desea reiniciar el bucle de simulación para mitigar las bajas? (S/N): )";
 }
 
-void mostrarCreditos(std::string nombreIntegrante1, std::string nombreIntegrante2, std::string nombreIntegrante3) {
+// 4.3. ESTADO TERMINAL B: Desenlace por éxito operativo completo
+void mostrarMisionCompleta() {
+    limpiarPantalla();
+    std::cout << VERDE << R"(
+=================================================================================
+ __  __ ___ ____ ___ ___  _   _    ____ ___  __  __ ____  _     _____ _____ _    
+|  \/  |_ _/ ___|_ _/ _ \| \ | |  / ___/ _ \|  \/  |  _ \| |   | ____|_   _/ \   
+| |\/| || |\___ \| | | | |  \| | | |  | | | | |\/| | |_) | |   |  _|   | |/ _ \  
+| |  | || | ___) | | |_| | |\  | | |__| |_| | |  | |  __/| |___| |___  | / ___ \ 
+|_|  |_|___|____/___\___/|_| \_|  \____\___/|_|  |_|_|   |_____|_____| |/_/   \_\
+=================================================================================
+)" << RESET;
+
+    std::cout << R"(
+ DIAGNÓSTICO: OPERACIÓN CONCLUIDA CON EXCELENCIA
+ ¡Felicidades, Comandante! Éxito absoluto en los vectores de transferencia espacial.
+ Los 12 tripulantes se encuentran a salvo. Has mitigado la crisis de Artemis II.
+
+---------------------------------------------------------------------------------
+ ¿Desea ejecutar una nueva sesión operativa para optimizar sus tiempos? (S/N): )";
+}
+
+// 4.4. CIERRE FORMAL DEL SISTEMA: Créditos institucionales y salida limpia
+void mostrarCreditos(std::string name1, std::string name2, std::string name3) {
     limpiarPantalla();
     std::cout << AMARILLO << R"(
 =================================================================================
-                            CRÉDITOS DEL PROYECTO
+                        ATRIBUCIONES Y CRÉDITOS DEL PROYECTO
 =================================================================================
 )" << RESET;
-    std::cout << " GRACIAS POR JUGAR \"ARTEMIS II: RETURN TO THE MOON\"\n\n";
-    std::cout << " Desarrollado en 48 horas bajo la metodología WBS por:\n";
-    std::cout << " - Integrante 1 (Dev Lead & Logic): " << nombreIntegrante1 << "\n";
-    std::cout << " - Integrante 2 (UI/UX & ASCII Artist): " << nombreIntegrante2 << "\n";
-    std::cout << " - Integrante 3 (QA & Documentation): " << nombreIntegrante3 << "\n\n";
+    std::cout << " GRACIAS POR COOPERAR EN \"ARTEMIS II: RETURN TO THE MOON\"\n\n";
+    std::cout << " Célula de Trabajo Ágil - Sprint Estudiantil (48 Horas Mandatarias):\n";
+    std::cout << " - Integrante 1 (Lógica de Negocio y Motor de Simulación): " << name1 << "\n";
+    std::cout << " - Integrante 2 (Diseño Arquitectónico UI/UX y Arte ASCII): " << name2 << "\n";
+    std::cout << " - Integrante 3 (Aseguramiento de Calidad QA y Auditoría): " << name3 << "\n\n";
     std::cout << " Herramientas de IA utilizadas y auditadas en Bitácora (Anexo 1):\n";
-    std::cout << " - ChatGPT / Gemini (Asistencia en UI y estructura modular C++).\n\n";
-    std::cout << " © 2026 - FlyMeToTheMoon Studios. Todos los derechos reservados.\n";
+    std::cout << " - Engine Evaluador Gemini: Optimización de flujos cronológicos y refinamiento estético ASCII.\n\n";
+    std::cout << " © 2026 - FlyMeToTheMoon Academic Studios. Especificación de Diseño Formal.\n";
     std::cout << AMARILLO << "=================================================================================" << RESET << std::endl;
 }
+
+#endif // INTERFAZ_H
